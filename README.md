@@ -1,2 +1,3 @@
 # BusinessReviews
-Full Stack Web-application for Business Reviews 
+
+Full Stack Web-application for Business Reviews
