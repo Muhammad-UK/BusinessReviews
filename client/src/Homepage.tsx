@@ -11,21 +11,21 @@ export const Homepage = () => {
     <div>
       <h2 className="mb-4">Welcome to the Business Reviews!</h2>
       <div className="flex flex-rows gap-4">
-        <Card className="flex flex-col justify-between">
+        <Card className="">
           <CardHeader>
             <CardTitle>The highest rated business</CardTitle>
           </CardHeader>
           <CardContent>{"placeholder business"}</CardContent>
           <CardFooter>{"placeholder rating"}</CardFooter>
         </Card>
-        <Card className="flex flex-col justify-between">
+        <Card className="">
           <CardHeader>
             <CardTitle>The most reviewed business</CardTitle>
           </CardHeader>
           <CardContent>{"placeholder business"}</CardContent>
           <CardFooter>{"placeholder reviews"}</CardFooter>
         </Card>
-        <Card className="flex flex-col justify-between">
+        <Card className="">
           <CardHeader>
             <CardTitle>The most active member</CardTitle>
           </CardHeader>
