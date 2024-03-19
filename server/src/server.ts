@@ -46,15 +46,7 @@ app.get("/api/businesses", async (req, res, next) => {
     next(error);
   }
 });
-
-// POST Route to Login and Register
-app.post("/api/auth/login", async (req, res, next) => {
-  try {
-    res.send(await authenticate(req.body));
-  } catch (error) {
-    next(error);
-  }
-});
+// GET Route for a logged in member
 app.get("/api/auth/me", isLoggedIn, (req, res, next) => {
   try {
     res.send(req.body.member);
@@ -62,6 +54,36 @@ app.get("/api/auth/me", isLoggedIn, (req, res, next) => {
     next(error);
   }
 });
+
+// POST Routes to Login and Register
+app.post("/api/auth/login", async (req, res, next) => {
+  try {
+    res.send(await authenticate(req.body));
+  } catch (error) {
+    next(error);
+  }
+});
+app.post("/api/auth/register", async (req, res, next) => {
+  try {
+    req.body.id = uuidv4();
+    await createMember(req.body);
+    res.send(await authenticate(req.body));
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST Route to add a new business
+app.post("/api/businesses", async (req, res, next) => {
+  try {
+    req.body.id = uuidv4();
+    await createBusiness(req.body);
+    res.send(req.body);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Error Handling
 app.use(
   (
