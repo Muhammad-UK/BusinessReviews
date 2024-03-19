@@ -1,16 +1,78 @@
 import {
+  authenticate,
   client,
   createBusiness,
   createMember,
   createTables,
   fetchBusinesses,
   fetchMembers,
+  findMemberWithToken,
 } from "./db";
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
 
 const app = express();
 app.use(express.json());
+
+// Middleware to check if user is logged in
+const isLoggedIn = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    if (!req.headers.authorization) {
+      throw new Error("not authorized");
+    }
+    req.body.member = await findMemberWithToken(req.headers.authorization);
+    next!();
+  } catch (ex) {
+    next!(ex);
+  }
+};
+
+// GET Routes for members and businesses
+app.get("/api/members", async (req, res, next) => {
+  try {
+    res.send(await fetchMembers());
+  } catch (error) {
+    next(error);
+  }
+});
+app.get("/api/businesses", async (req, res, next) => {
+  try {
+    res.send(await fetchBusinesses());
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST Route to Login and Register
+app.post("/api/auth/login", async (req, res, next) => {
+  try {
+    res.send(await authenticate(req.body));
+  } catch (error) {
+    next(error);
+  }
+});
+app.get("/api/auth/me", isLoggedIn, (req, res, next) => {
+  try {
+    res.send(req.body.member);
+  } catch (error) {
+    next(error);
+  }
+});
+// Error Handling
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): void => {
+    res.status(500).send(err.message || "Something went wrong");
+  }
+);
 
 const init = async () => {
   const port = process.env.PORT || 3000;
@@ -28,7 +90,6 @@ const init = async () => {
     }),
     createMember({
       id: uuidv4(),
-
       username: "lucy",
       password: "lucy123",
     }),

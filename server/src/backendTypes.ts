@@ -10,3 +10,6 @@ export type Business = {
   city: string;
   photo_url?: string;
 };
+export interface SpecializedError extends Error {
+  status?: number;
+}
