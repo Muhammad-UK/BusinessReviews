@@ -1,7 +1,8 @@
 import { Business } from "@/lib/frontendTypes";
 import { useParams } from "react-router-dom";
-import { Card, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { StyledLink } from "./ui/StyledLink";
+import { ArrowLeft, Building } from "lucide-react";
 
 export const BusinessDetail = ({ businesses }: { businesses: Business[] }) => {
   const { id } = useParams();
@@ -10,18 +11,30 @@ export const BusinessDetail = ({ businesses }: { businesses: Business[] }) => {
   if (!specificBusiness) return <div>No matches found</div>;
   return (
     <div>
-      <h2 className="mb-2">
-        {specificBusiness.name[0].toUpperCase() +
-          specificBusiness.name.slice(1)}
-        's Reviews:
-      </h2>
+      <Card className="mb-2 w-fit rounded-btn hover:bg-slate-900">
+        <StyledLink to="/businesses">
+          <ArrowLeft />
+          Back to all businesses
+        </StyledLink>
+      </Card>
+      <hr />
       <Card
-        className="mb-2 w-fit rounded-btn hover:bg-slate-900"
+        className="mt-2 mb-2 w-fit rounded-btn hover:bg-slate-900"
         key={specificBusiness!.id}
       >
-        <StyledLink to="/businesses">Back to all businesses</StyledLink>
+        <CardHeader>
+          <CardTitle className="flex gap-2">
+            <Building />
+            {specificBusiness.name}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {specificBusiness.description} <br />
+          They are based in {specificBusiness.city}
+        </CardContent>
       </Card>
-      <div className="flex flex-rows gap-4">
+      <h2>Reviews:</h2>
+      <div className="flex flex-rows gap-4 mt-2">
         <Card className="hover:bg-slate-900" key={specificBusiness!.id}>
           <CardHeader>
             <CardTitle>Placeholder review</CardTitle>

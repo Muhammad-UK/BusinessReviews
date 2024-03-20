@@ -12,7 +12,7 @@ export const Members = ({ members }: { members: Member[] }) => {
             <CardHeader>
               <CardTitle>
                 <StyledLink to={`/members/${member.id}`}>
-                  {member.username}
+                  {member.username[0].toUpperCase() + member.username.slice(1)}
                 </StyledLink>
               </CardTitle>
               {"placeholder review count"}
