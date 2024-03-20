@@ -6,9 +6,9 @@ export const Members = ({ members }: { members: Member[] }) => {
   return (
     <div>
       <h2 className="mb-4">Members:</h2>
-      <div className="flex flex-rows gap-4">
+      <div className="flex flex-rows flex-wrap gap-4">
         {members.map((member) => (
-          <Card className="hover:bg-slate-900" key={member.id}>
+          <Card className="hover:bg-slate-900 w-1/6" key={member.id}>
             <CardHeader>
               <CardTitle>
                 <StyledLink to={`/members/${member.id}`}>

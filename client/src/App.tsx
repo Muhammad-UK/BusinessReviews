@@ -37,15 +37,24 @@ function App() {
       <main>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <h1>Business Reviews</h1>
-          <nav className="navbar flex flex-rows gap-4">
-            <div className="flex-1">
-              <StyledLink to="/">Home</StyledLink>
-              <StyledLink to="/businesses">
+          <nav className="navbar flex-rows gap-4">
+            <div role="tablist" className="flex-1 tabs tabs-boxed">
+              {/* //TODO useLocation for active tab in classname with template strings */}
+              <StyledLink role="tab" className="tab" to="/">
+                Home
+              </StyledLink>
+              <StyledLink role="tab" className="tab" to="/businesses">
                 Businesses ({businesses.length})
               </StyledLink>
-              <StyledLink to="/members">Members ({members.length})</StyledLink>
-              <StyledLink to="/reviews">Reviews</StyledLink>
-              <StyledLink to="/faq">FAQ</StyledLink>
+              <StyledLink role="tab" className="tab" to="/members">
+                Members ({members.length})
+              </StyledLink>
+              <StyledLink role="tab" className="tab" to="/reviews">
+                Reviews
+              </StyledLink>
+              <StyledLink role="tab" className="tab" to="/faq">
+                FAQ
+              </StyledLink>
             </div>
             <div className="flex-0">
               <AuthForm />
