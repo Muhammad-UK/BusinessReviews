@@ -11,11 +11,70 @@ import { useEffect, useState } from "react";
 import { Business, Member } from "./lib/frontendTypes";
 import { MemberDetail } from "./components/MemberDetail";
 import { BusinessDetail } from "./components/BusinessDetail";
+import { Button } from "./components/ui/button";
 
 function App() {
   // Initializing members and businesses state
   const [members, setMembers] = useState<Member[]>([]);
   const [businesses, setBusinesses] = useState<Business[]>([]);
+  // Initializing auth and formError state
+  const [auth, setAuth] = useState<Member | undefined>();
+  const [formError, setFormError] = useState<Error | undefined>();
+
+  // Login Helper function
+  const attemptLoginWithToken = async () => {
+    const token = window.localStorage.getItem("token");
+    if (token) {
+      const response = await fetch(`/api/auth/me`, {
+        headers: {
+          authorization: token,
+        },
+      });
+      const json = await response.json();
+      if (response.ok) {
+        setAuth(json as Member);
+      }
+    }
+  };
+  // Login/Logout and Register functions
+  const login = async (credentials?: Member) => {
+    const response = await fetch("api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
+    const json = await response.json();
+    if (response.ok) {
+      window.localStorage.setItem("token", json.token);
+      attemptLoginWithToken();
+      setFormError(undefined);
+    } else {
+      setFormError(Error("Login Error"));
+    }
+  };
+  const register = async (credentials?: Member) => {
+    const response = await fetch("api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
+    const json = await response.json();
+    if (response.ok) {
+      window.localStorage.setItem("token", json.token);
+      attemptLoginWithToken();
+      setFormError(undefined);
+    } else {
+      setFormError(Error("Registration Error"));
+    }
+  };
+  const logout = async () => {
+    window.localStorage.removeItem("token");
+    setAuth(undefined);
+  };
 
   // FETCH Functions to set frontend state
   const fetchMemberData = async () => {
@@ -31,7 +90,7 @@ function App() {
   useEffect(() => {
     fetchMemberData();
     fetchBusinessData();
-  }, []);
+  }, [auth]);
   return (
     <>
       <main>
@@ -57,7 +116,15 @@ function App() {
               </StyledLink>
             </div>
             <div className="flex-0">
-              <AuthForm />
+              {auth ? (
+                <Button onClick={logout}>Logout</Button>
+              ) : (
+                <AuthForm
+                  login={login}
+                  register={register}
+                  formError={formError}
+                />
+              )}
             </div>
           </nav>
           <Routes>

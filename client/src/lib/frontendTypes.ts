@@ -10,3 +10,10 @@ export type Business = {
   city: string;
   photo_url?: string;
 };
+export type LoginFn = (member?: Member) => void;
+export type RegisterFn = (member?: Member) => void;
+export type AuthFormProps = {
+  login: LoginFn;
+  register: RegisterFn;
+  formError: Error | undefined;
+};

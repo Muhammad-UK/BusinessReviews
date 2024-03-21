@@ -11,6 +11,7 @@ import {
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
 import { data } from "./data";
+import type { SpecializedError } from "./backendTypes";
 
 const app = express();
 app.use(express.json());
@@ -88,12 +89,15 @@ app.post("/api/businesses", async (req, res, next) => {
 // Error Handling
 app.use(
   (
-    err: Error,
+    err: SpecializedError,
     req: express.Request,
     res: express.Response,
     next: express.NextFunction
   ): void => {
-    res.status(500).send(err.message || "Something went wrong");
+    console.error(err);
+    res
+      .status(err.status || 500)
+      .send({ error: err.message ? err.message : err });
   }
 );
 
