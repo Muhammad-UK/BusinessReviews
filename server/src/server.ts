@@ -3,14 +3,17 @@ import {
   client,
   createBusiness,
   createMember,
+  createReview,
   createTables,
   fetchBusinesses,
   fetchMembers,
+  fetchReviews,
+  fetchReviewsById,
   findMemberWithToken,
 } from "./db";
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
-import { data } from "./data";
+import { data, reviewsData } from "./data";
 import type { SpecializedError } from "./backendTypes";
 
 const app = express();
@@ -27,13 +30,13 @@ const isLoggedIn = async (
       throw new Error("not authorized");
     }
     req.body.member = await findMemberWithToken(req.headers.authorization);
-    next!();
+    next();
   } catch (ex) {
-    next!(ex);
+    next(ex);
   }
 };
 
-// GET Routes for members and businesses
+// GET Routes for members, businesses and reviews
 app.get("/api/members", async (req, res, next) => {
   try {
     res.send(await fetchMembers());
@@ -48,10 +51,35 @@ app.get("/api/businesses", async (req, res, next) => {
     next(error);
   }
 });
+app.get("/api/reviews", async (req, res, next) => {
+  try {
+    res.send(await fetchReviews());
+  } catch (error) {
+    next(error);
+  }
+});
 // GET Route for a logged in member
 app.get("/api/auth/me", isLoggedIn, (req, res, next) => {
   try {
     res.send(req.body.member);
+  } catch (error) {
+    next(error);
+  }
+});
+// GET Route specific reviews
+app.get("/api/reviews/:type/:id", async (req, res, next) => {
+  try {
+    if (!req.params.type || !req.params.id) {
+      const error: SpecializedError = Error("Bad Request");
+      error.status = 400;
+      throw error;
+    }
+    if (req.params.type !== "member" && req.params.type !== "business") {
+      const error: SpecializedError = Error("Bad Request");
+      error.status = 400;
+      throw error;
+    }
+    res.send(await fetchReviewsById(req.params.id, req.params.type));
   } catch (error) {
     next(error);
   }
@@ -80,6 +108,22 @@ app.post("/api/businesses", async (req, res, next) => {
   try {
     req.body.id = uuidv4();
     await createBusiness(req.body);
+    res.send(req.body);
+  } catch (error) {
+    next(error);
+  }
+});
+// POST Route to add a new review
+app.post("/api/reviews/:business_id", async (req, res, next) => {
+  try {
+    if (!req.params.business_id) {
+      const error: SpecializedError = Error("Bad Request");
+      error.status = 400;
+      throw error;
+    }
+    req.body.business_id = req.params.business_id;
+    req.body.id = uuidv4();
+    await createReview(req.body);
     res.send(req.body);
   } catch (error) {
     next(error);
@@ -117,6 +161,10 @@ const init = async () => {
     await createBusiness(data.businesses[i]);
   }
 
+  for (let i = 0; i < reviewsData.length; i++) {
+    await createReview(reviewsData[i]);
+  }
+
   const [moe, lucy, ethyl, curly] = await fetchMembers();
   console.log(moe, lucy, ethyl, curly);
   console.log("Members created and fetched successfully");
@@ -124,6 +172,10 @@ const init = async () => {
   const [Apple, Samsung, Google, Facebook, Tesla] = await fetchBusinesses();
   console.log(Apple, Samsung, Google, Facebook, Tesla);
   console.log("Businesses created and fetched successfully");
+
+  console.log(await fetchReviews());
+  console.log(await fetchReviewsById(moe.id, "member"));
+  console.log("Reviews created and fetched successfully");
 
   app.listen(port, () => {
     console.log(`Listening on port ${port}`);
