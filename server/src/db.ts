@@ -40,8 +40,8 @@ export const createTables = async () => {
         id UUID PRIMARY KEY,
         member_id UUID REFERENCES members(id) NOT NULL,
         business_id UUID REFERENCES businesses(id) NOT NULL,
-        rating VARCHAR(3) NOT NULL,
-        body TEXT,
+        rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+        comment TEXT,
         CONSTRAINT unique_review UNIQUE(member_id, business_id)
     );
     `;
@@ -92,10 +92,10 @@ export const createReview = async ({
   member_id,
   business_id,
   rating,
-  body,
+  comment,
 }: Review): Promise<Review> => {
   const SQL = /*sql*/ `
-    INSERT INTO reviews(id, member_id, business_id, rating, body)
+    INSERT INTO reviews(id, member_id, business_id, rating, comment)
     VALUES($1, $2, $3, $4, $5)
     RETURNING *
     `;
@@ -104,7 +104,7 @@ export const createReview = async ({
     member_id,
     business_id,
     rating,
-    body || "",
+    comment || "",
   ]);
   return response.rows[0] as Review;
 };

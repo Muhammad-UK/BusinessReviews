@@ -250,39 +250,39 @@ export const reviewsData = [
     id: uuidv4(),
     member_id: data.members[0].id,
     business_id: data.businesses[0].id,
-    rating: "5/5",
-    body: "I love this place!",
+    rating: 5,
+    comment: "I love this place!",
   },
   {
     id: uuidv4(),
     member_id: data.members[1].id,
     business_id: data.businesses[1].id,
-    rating: "1/5",
-    body: "I hate this place!",
+    rating: 1,
+    comment: "I hate this place!",
   },
   {
     id: uuidv4(),
     member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
     business_id:
       data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: `${Math.floor(Math.random() * 5) + 1}/5`,
-    body: `This place was ${Math.random() > 0.5 ? "amazing" : "terrible"}!`,
+    rating: Math.floor(Math.random() * 5) + 1,
+    comment: `This place was ${Math.random() > 0.5 ? "amazing" : "terrible"}!`,
   },
   {
     id: uuidv4(),
     member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
     business_id:
       data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: `${Math.floor(Math.random() * 5) + 1}/5`,
-    body: `I ${Math.random() > 0.5 ? "loved" : "hated"} this place!`,
+    rating: Math.floor(Math.random() * 5) + 1,
+    comment: `I ${Math.random() > 0.5 ? "loved" : "hated"} this place!`,
   },
   {
     id: uuidv4(),
     member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
     business_id:
       data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: `${Math.floor(Math.random() * 5) + 1}/5`,
-    body: `This place had ${
+    rating: Math.floor(Math.random() * 5) + 1,
+    comment: `This place had ${
       Math.random() > 0.5 ? "so much" : "so little"
     } charm.`,
   },
@@ -291,8 +291,8 @@ export const reviewsData = [
     member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
     business_id:
       data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: `${Math.floor(Math.random() * 5) + 1}/5`,
-    body: `I ${
+    rating: Math.floor(Math.random() * 5) + 1,
+    comment: `I ${
       Math.random() > 0.5 ? "really enjoyed" : "not enjoyed"
     } my time here.`,
   },
@@ -301,16 +301,16 @@ export const reviewsData = [
     member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
     business_id:
       data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: `${Math.floor(Math.random() * 5) + 1}/5`,
-    body: `This place was ${Math.random() > 0.5 ? "so cool" : "so boring"}!`,
+    rating: Math.floor(Math.random() * 5) + 1,
+    comment: `This place was ${Math.random() > 0.5 ? "so cool" : "so boring"}!`,
   },
   {
     id: uuidv4(),
     member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
     business_id:
       data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: `${Math.floor(Math.random() * 5) + 1}/5`,
-    body: `I visited ${
+    rating: Math.floor(Math.random() * 5) + 1,
+    comment: `I visited ${
       data.businesses[Math.floor(Math.random() * data.businesses.length)].name
     } and had an ${
       Math.random() > 0.5 ? "unforgettable" : "disappointing"
@@ -327,8 +327,8 @@ export const reviewsData = [
     member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
     business_id:
       data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: `${Math.floor(Math.random() * 5) + 1}/5`,
-    body: `I visited ${
+    rating: Math.floor(Math.random() * 5) + 1,
+    comment: `I visited ${
       data.businesses[Math.floor(Math.random() * data.businesses.length)].name
     } and had an ${
       Math.random() > 0.5 ? "unforgettable" : "disappointing"
@@ -345,8 +345,8 @@ export const reviewsData = [
     member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
     business_id:
       data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: `${Math.floor(Math.random() * 5) + 1}/5`,
-    body: `I visited ${
+    rating: Math.floor(Math.random() * 5) + 1,
+    comment: `I visited ${
       data.businesses[Math.floor(Math.random() * data.businesses.length)].name
     } and had an ${
       Math.random() > 0.5 ? "unforgettable" : "disappointing"
@@ -363,8 +363,8 @@ export const reviewsData = [
     member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
     business_id:
       data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: `${Math.floor(Math.random() * 5) + 1}/5`,
-    body: `I visited ${
+    rating: Math.floor(Math.random() * 5) + 1,
+    comment: `I visited ${
       data.businesses[Math.floor(Math.random() * data.businesses.length)].name
     } and had an ${
       Math.random() > 0.5 ? "unforgettable" : "disappointing"
@@ -374,6 +374,6 @@ export const reviewsData = [
       Math.random() > 0.5 ? "helpful" : "unfriendly"
     }. Overall, I would recommend a visit ${
       Math.random() > 0.5 ? "with caution" : "with great enthusiasm"
-    }.`,
+    },`,
   },
 ];

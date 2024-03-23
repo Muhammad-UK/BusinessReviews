@@ -1,24 +1,39 @@
-import { Card, CardHeader, CardTitle } from "./components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./components/ui/card";
 import { Business } from "./lib/frontendTypes";
 import { StyledLink } from "./components/ui/StyledLink";
 
-export const Businesses = ({ businesses }: { businesses: Business[] }) => {
+export const Businesses: React.FC<{
+  businesses: Business[];
+  setBusinessesReviews: () => void;
+}> = ({ businesses, setBusinessesReviews }) => {
+  setBusinessesReviews();
   return (
     <div>
       <h2 className="mb-4">Businesses:</h2>
       <div className="flex flex-rows flex-wrap gap-4">
-        {businesses.map((business) => (
-          <Card className="hover:bg-slate-900 w-1/6" key={business.id}>
-            <CardHeader>
-              <CardTitle>
-                <StyledLink to={`/businesses/${business.id}`}>
-                  {business.name}
-                </StyledLink>
-              </CardTitle>
-              {"placeholder rating"}
-            </CardHeader>
-          </Card>
-        ))}
+        {businesses.map((business) => {
+          return (
+            <Card className="hover:bg-slate-900 w-1/6" key={business.id}>
+              <CardHeader>
+                <CardTitle>
+                  <StyledLink to={`/businesses/${business.id}`}>
+                    {business.name}
+                  </StyledLink>
+                </CardTitle>
+                {business.reviews && business.reviews.length > 0 && (
+                  <CardDescription>
+                    Rating: {business.reviews[0].rating}/5
+                  </CardDescription>
+                )}
+              </CardHeader>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
