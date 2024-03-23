@@ -101,11 +101,21 @@ function App() {
   }, [auth]);
 
   // Helper functions to set reviews to members and businesses and do any related logic
+  // TODO I tried to make useEffects work but I couldn't get it to rerender properly whenever the pages were reloaded
+  // Feedback on how I could've made this work would be appreciated
   const setMembersReviews = () => {
     members.forEach((member) => {
       member.reviews = reviews.filter(
         (review) => review.member_id === member.id
       );
+      member.reviews.forEach((review) => {
+        const tempBusiness = businesses.find(
+          (business) => business.id === review.business_id
+        );
+        if (tempBusiness) {
+          review.business_name = tempBusiness.name;
+        }
+      });
     });
   };
   const setBusinessesReviews = () => {
@@ -113,6 +123,14 @@ function App() {
       business.reviews = reviews.filter(
         (review) => review.business_id === business.id
       );
+      business.reviews.forEach((review) => {
+        const tempMember = members.find(
+          (member) => member.id === review.member_id
+        );
+        if (tempMember) {
+          review.member_name = tempMember.username;
+        }
+      });
     });
   };
   return (
@@ -164,7 +182,12 @@ function App() {
             />
             <Route
               path="/businesses/:id"
-              element={<BusinessDetail businesses={businesses} />}
+              element={
+                <BusinessDetail
+                  businesses={businesses}
+                  setBusinessesReviews={setBusinessesReviews}
+                />
+              }
             />
             <Route
               path="/members"
@@ -177,7 +200,12 @@ function App() {
             />
             <Route
               path="/members/:id"
-              element={<MemberDetail members={members} />}
+              element={
+                <MemberDetail
+                  members={members}
+                  setMembersReviews={setMembersReviews}
+                />
+              }
             />
             <Route
               path="/createreviews"

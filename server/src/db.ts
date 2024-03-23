@@ -30,7 +30,7 @@ export const createTables = async () => {
 
     CREATE TABLE businesses(
         id UUID PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
+        name VARCHAR(255) UNIQUE NOT NULL,
         description TEXT NOT NULL,
         city VARCHAR(255) NOT NULL,
         photo_url VARCHAR(255)

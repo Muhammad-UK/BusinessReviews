@@ -9,7 +9,6 @@ export type Member = {
   id: string;
   username: string;
   password: string;
-  reviews?: Review[];
 };
 export type Business = {
   id: string;
@@ -17,7 +16,6 @@ export type Business = {
   description: string;
   city: string;
   photo_url?: string;
-  reviews?: Review[];
 };
 export interface SpecializedError extends Error {
   status?: number;

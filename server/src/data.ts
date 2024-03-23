@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
+import type { Business, Member, Review } from "./backendTypes";
 
-export const data = {
+export const data: {
+  members: Member[];
+  businesses: Business[];
+} = {
   members: [
     {
       id: uuidv4(),
@@ -229,23 +233,9 @@ export const data = {
         "Dell Corporation is an American multinational technology company based in Redmond, Washington. It is a part of the Dell Corporation family of companies",
       city: "Redmond",
     },
-    {
-      id: uuidv4(),
-      name: "Cisco",
-      description:
-        "Cisco Systems, Inc. is an American multinational technology company based in San Jose, California. It is a part of the Cisco Systems, Inc. family of companies",
-      city: "San Jose",
-    },
-    {
-      id: uuidv4(),
-      name: "HP",
-      description:
-        "Hewlett-Packard Company is an American multinational technology company based in Palo Alto, California. It is a part of the Hewlett-Packard Company family of companies",
-      city: "Palo Alto",
-    },
   ],
 };
-export const reviewsData = [
+export const reviewsData: Review[] = [
   {
     id: uuidv4(),
     member_id: data.members[0].id,
@@ -257,123 +247,91 @@ export const reviewsData = [
     id: uuidv4(),
     member_id: data.members[1].id,
     business_id: data.businesses[1].id,
+    rating: 3,
+    comment: "Worth the money.",
+  },
+  {
+    id: uuidv4(),
+    member_id: data.members[2].id,
+    business_id: data.businesses[2].id,
+    rating: 4,
+    comment: "Could be better.",
+  },
+  {
+    id: uuidv4(),
+    member_id: data.members[3].id,
+    business_id: data.businesses[3].id,
+    rating: 2,
+    comment: "Not worth the price.",
+  },
+  {
+    id: uuidv4(),
+    member_id: data.members[0].id,
+    business_id: data.businesses[10].id,
+    rating: 4,
+    comment: "Great customer service.",
+  },
+  {
+    id: uuidv4(),
+    member_id: data.members[1].id,
+    business_id: data.businesses[3].id,
+    rating: 5,
+    comment: "Perfect product.",
+  },
+  {
+    id: uuidv4(),
+    member_id: data.members[2].id,
+    business_id: data.businesses[9].id,
+    rating: 3,
+    comment: "Worth the investment.",
+  },
+  {
+    id: uuidv4(),
+    member_id: data.members[2].id,
+    business_id: data.businesses[3].id,
     rating: 1,
-    comment: "I hate this place!",
+    comment: "Beware of scams.",
   },
   {
     id: uuidv4(),
-    member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
-    business_id:
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: Math.floor(Math.random() * 5) + 1,
-    comment: `This place was ${Math.random() > 0.5 ? "amazing" : "terrible"}!`,
+    member_id: data.members[0].id,
+    business_id: data.businesses[11].id,
+    rating: 5,
+    comment: "Exceptional support.",
   },
   {
     id: uuidv4(),
-    member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
-    business_id:
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: Math.floor(Math.random() * 5) + 1,
-    comment: `I ${Math.random() > 0.5 ? "loved" : "hated"} this place!`,
+    member_id: data.members[1].id,
+    business_id: data.businesses[2].id,
+    rating: 4,
+    comment: "Excellent product.",
   },
   {
     id: uuidv4(),
-    member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
-    business_id:
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: Math.floor(Math.random() * 5) + 1,
-    comment: `This place had ${
-      Math.random() > 0.5 ? "so much" : "so little"
-    } charm.`,
+    member_id: data.members[2].id,
+    business_id: data.businesses[6].id,
+    rating: 3,
+    comment: "Good quality.",
   },
   {
     id: uuidv4(),
-    member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
-    business_id:
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: Math.floor(Math.random() * 5) + 1,
-    comment: `I ${
-      Math.random() > 0.5 ? "really enjoyed" : "not enjoyed"
-    } my time here.`,
+    member_id: data.members[3].id,
+    business_id: data.businesses[0].id,
+    rating: 2,
+    comment: "Not recommended.",
   },
   {
     id: uuidv4(),
-    member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
-    business_id:
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: Math.floor(Math.random() * 5) + 1,
-    comment: `This place was ${Math.random() > 0.5 ? "so cool" : "so boring"}!`,
+    member_id: data.members[7].id,
+    business_id: data.businesses[1].id,
+    rating: 5,
+    comment: "I love this place!",
   },
   {
     id: uuidv4(),
-    member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
-    business_id:
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: Math.floor(Math.random() * 5) + 1,
-    comment: `I visited ${
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].name
-    } and had an ${
-      Math.random() > 0.5 ? "unforgettable" : "disappointing"
-    } experience. It was ${
-      Math.random() > 0.5 ? "full of life" : "devoid of energy"
-    } and the staff was ${
-      Math.random() > 0.5 ? "helpful" : "unfriendly"
-    }. Overall, I would recommend a visit ${
-      Math.random() > 0.5 ? "with caution" : "with great enthusiasm"
-    }.`,
-  },
-  {
-    id: uuidv4(),
-    member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
-    business_id:
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: Math.floor(Math.random() * 5) + 1,
-    comment: `I visited ${
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].name
-    } and had an ${
-      Math.random() > 0.5 ? "unforgettable" : "disappointing"
-    } experience. It was ${
-      Math.random() > 0.5 ? "full of life" : "devoid of energy"
-    } and the staff was ${
-      Math.random() > 0.5 ? "helpful" : "unfriendly"
-    }. Overall, I would recommend a visit ${
-      Math.random() > 0.5 ? "with caution" : "with great enthusiasm"
-    }.`,
-  },
-  {
-    id: uuidv4(),
-    member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
-    business_id:
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: Math.floor(Math.random() * 5) + 1,
-    comment: `I visited ${
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].name
-    } and had an ${
-      Math.random() > 0.5 ? "unforgettable" : "disappointing"
-    } experience. It was ${
-      Math.random() > 0.5 ? "full of life" : "devoid of energy"
-    } and the staff was ${
-      Math.random() > 0.5 ? "helpful" : "unfriendly"
-    }. Overall, I would recommend a visit ${
-      Math.random() > 0.5 ? "with caution" : "with great enthusiasm"
-    }.`,
-  },
-  {
-    id: uuidv4(),
-    member_id: data.members[Math.floor(Math.random() * data.members.length)].id,
-    business_id:
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].id,
-    rating: Math.floor(Math.random() * 5) + 1,
-    comment: `I visited ${
-      data.businesses[Math.floor(Math.random() * data.businesses.length)].name
-    } and had an ${
-      Math.random() > 0.5 ? "unforgettable" : "disappointing"
-    } experience. It was ${
-      Math.random() > 0.5 ? "full of life" : "devoid of energy"
-    } and the staff was ${
-      Math.random() > 0.5 ? "helpful" : "unfriendly"
-    }. Overall, I would recommend a visit ${
-      Math.random() > 0.5 ? "with caution" : "with great enthusiasm"
-    },`,
+    member_id: data.members[1].id,
+    business_id: data.businesses[5].id,
+    rating: 3,
+    comment: "Worth the money.",
   },
 ];

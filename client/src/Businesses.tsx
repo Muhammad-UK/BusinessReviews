@@ -25,10 +25,17 @@ export const Businesses: React.FC<{
                     {business.name}
                   </StyledLink>
                 </CardTitle>
-                {business.reviews && business.reviews.length > 0 && (
+                {business.reviews && business.reviews.length > 0 ? (
                   <CardDescription>
-                    Rating: {business.reviews[0].rating}/5
+                    Rating:{" "}
+                    {(
+                      business.reviews.reduce((a, b) => a + b.rating, 0) /
+                      business.reviews.length
+                    ).toFixed(1)}
+                    /5
                   </CardDescription>
+                ) : (
+                  <CardDescription>No reviews yet</CardDescription>
                 )}
               </CardHeader>
             </Card>

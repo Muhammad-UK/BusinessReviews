@@ -30,7 +30,9 @@ export const Members: React.FC<{
                   <CardDescription>
                     Reviews: {member.reviews.length}
                   </CardDescription>
-                ) : null}
+                ) : (
+                  <CardDescription>No reviews yet</CardDescription>
+                )}
               </CardHeader>
             </Card>
           );
