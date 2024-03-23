@@ -114,16 +114,17 @@ app.post("/api/businesses", async (req, res, next) => {
   }
 });
 // POST Route to add a new review
-app.post("/api/reviews/:business_id", async (req, res, next) => {
+app.post("/api/reviews/:business_id", isLoggedIn, async (req, res, next) => {
   try {
     if (!req.params.business_id) {
       const error: SpecializedError = Error("Bad Request");
       error.status = 400;
       throw error;
     }
-    req.body.business_id = req.params.business_id;
-    req.body.id = uuidv4();
-    await createReview(req.body);
+    req.body.review.member_id = req.body.member.id;
+    req.body.review.business_id = req.params.business_id;
+    req.body.review.id = uuidv4();
+    await createReview(req.body.review);
     res.send(req.body);
   } catch (error) {
     next(error);
