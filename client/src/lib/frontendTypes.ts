@@ -21,10 +21,14 @@ export type Business = {
   photo_url?: string;
   reviews: Review[];
 };
-export type LoginFn = (member?: Member) => void;
-export type RegisterFn = (member?: Member) => void;
-export type AuthFormProps = {
+export type LoginFn = (member?: Member) => Promise<void>;
+export type RegisterFn = (member?: Member) => Promise<void>;
+export type AuthContextType = {
+  auth: Member | undefined;
+  reviews: Review[];
+  businesses: Business[];
+  createReviewFn: (review: Review) => Promise<void>;
+  formError: Error | undefined;
   login: LoginFn;
   register: RegisterFn;
-  formError: Error | undefined;
 };

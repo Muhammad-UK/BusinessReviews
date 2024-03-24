@@ -1,17 +1,22 @@
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Homepage } from "./Homepage";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { StyledLink } from "./components/ui/StyledLink";
 import { AuthForm } from "./components/AuthForm";
 import { Businesses } from "./Businesses";
 import { Members } from "./Members";
 import { CreateReview } from "./CreateReview";
 import { FAQ } from "./FAQ";
-import { useEffect, useState } from "react";
-import { Business, Member, Review } from "./lib/frontendTypes";
+import { createContext, useEffect, useState } from "react";
+import { AuthContextType, Business, Member, Review } from "./lib/frontendTypes";
 import { MemberDetail } from "./components/MemberDetail";
 import { BusinessDetail } from "./components/BusinessDetail";
 import { Button } from "./components/ui/button";
+
+// Creating context in here instead of a separate context.tsx file because I only have one so far
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 function App() {
   // Initializing members and businesses state
@@ -22,6 +27,8 @@ function App() {
   // Initializing auth and formError state
   const [auth, setAuth] = useState<Member | undefined>();
   const [formError, setFormError] = useState<Error | undefined>();
+
+  const { pathname } = useLocation();
 
   // Login Helper function
   const attemptLoginWithToken = async () => {
@@ -76,6 +83,7 @@ function App() {
   const logout = async () => {
     window.localStorage.removeItem("token");
     setAuth(undefined);
+    setFormError(undefined);
   };
 
   // FETCH Functions to set frontend state
@@ -99,6 +107,35 @@ function App() {
     fetchBusinessData();
     fetchReviews();
   }, [auth]);
+
+  const createReviewFn = async (review: Review) => {
+    const token = window.localStorage.getItem("token");
+    const createdReview = {
+      review: {
+        rating: review.rating,
+        comment: review.comment || "",
+      },
+    };
+    if (token) {
+      const response = await fetch(`/api/reviews/${review.business_id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify(createdReview),
+      });
+      const json = await response.json();
+      if (response.ok) {
+        setReviews([...reviews, json.review]);
+        setFormError(undefined);
+        fetchBusinessData();
+        fetchMemberData();
+      } else {
+        setFormError(Error("Review Creation Error"));
+      }
+    }
+  };
 
   // Helper functions to set reviews to members and businesses and do any related logic
   // TODO I tried to make useEffects work but I couldn't get it to rerender properly whenever the pages were reloaded
@@ -133,6 +170,17 @@ function App() {
       });
     });
   };
+
+  const AuthContextValues: AuthContextType = {
+    auth,
+    reviews,
+    businesses,
+    createReviewFn,
+    formError,
+    login,
+    register,
+  };
+
   return (
     <>
       <main>
@@ -140,32 +188,53 @@ function App() {
           <h1>Business Reviews</h1>
           <nav className="navbar flex-rows gap-4">
             <div role="tablist" className="flex-1 tabs tabs-boxed">
-              {/* //TODO useLocation for active tab in classname with template strings */}
-              <StyledLink role="tab" className="tab" to="/">
+              {/* //TODO change default active tab colors to some blue */}
+              <StyledLink
+                role="tab"
+                className={`tab ${pathname === "/" ? "tab-active" : ""}`}
+                to="/"
+              >
                 Home
               </StyledLink>
-              <StyledLink role="tab" className="tab" to="/businesses">
+              <StyledLink
+                role="tab"
+                className={`tab ${
+                  pathname === "/businesses" ? "tab-active" : ""
+                }`}
+                to="/businesses"
+              >
                 Businesses ({businesses.length})
               </StyledLink>
-              <StyledLink role="tab" className="tab" to="/members">
+              <StyledLink
+                role="tab"
+                className={`tab ${pathname === "/members" ? "tab-active" : ""}`}
+                to="/members"
+              >
                 Members ({members.length})
               </StyledLink>
-              <StyledLink role="tab" className="tab" to="/createreviews">
+              <StyledLink
+                role="tab"
+                className={`tab ${
+                  pathname === "/createreviews" ? "tab-active" : ""
+                }`}
+                to="/createreviews"
+              >
                 Create A Review ({reviews.length})
               </StyledLink>
-              <StyledLink role="tab" className="tab" to="/faq">
+              <StyledLink
+                role="tab"
+                className={`tab ${pathname === "/faq" ? "tab-active" : ""}`}
+                to="/faq"
+              >
                 FAQ
               </StyledLink>
             </div>
             <div className="flex-0">
-              {auth ? (
-                <Button onClick={logout}>Logout</Button>
-              ) : (
-                <AuthForm
-                  login={login}
-                  register={register}
-                  formError={formError}
-                />
+              {auth && <Button onClick={logout}>Logout</Button>}
+              {!auth && !pathname.startsWith("/createreviews") && (
+                <AuthContext.Provider value={AuthContextValues}>
+                  <AuthForm />
+                </AuthContext.Provider>
               )}
             </div>
           </nav>
@@ -209,7 +278,11 @@ function App() {
             />
             <Route
               path="/createreviews"
-              element={<CreateReview reviews={reviews} />}
+              element={
+                <AuthContext.Provider value={AuthContextValues}>
+                  <CreateReview />
+                </AuthContext.Provider>
+              }
             />
             <Route path="/faq" element={<FAQ />} />
           </Routes>

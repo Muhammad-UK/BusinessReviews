@@ -1,3 +1,4 @@
+import { AuthContext } from "@/App";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,20 +8,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { AuthFormProps, Member } from "@/lib/frontendTypes";
-import React, { useState } from "react";
+import { AuthContextType, Member } from "@/lib/frontendTypes";
+import React, { useContext, useState } from "react";
 
-export const AuthForm = ({ login, register, formError }: AuthFormProps) => {
+export const AuthForm = () => {
+  const contextValues = useContext(AuthContext);
+  if (!contextValues) return null;
+  const { formError, login, register } = contextValues as AuthContextType;
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const loginSubmit = async (ev: React.FormEvent) => {
+  const handleSubmit = async (
+    ev: React.FormEvent,
+    type: "login" | "register"
+  ) => {
     ev.preventDefault();
-    login({ username, password } as Member);
-  };
-  const registerSubmit = async (ev: React.FormEvent) => {
-    ev.preventDefault();
-    register({ username, password } as Member);
+    if (username.length < 1 || password.length < 1)
+      return Error("Invalid input");
+    if (type === "login") {
+      login({ username, password } as Member);
+    } else if (type === "register") {
+      register({ username, password } as Member);
+    }
   };
   return (
     <Card>
@@ -40,8 +50,18 @@ export const AuthForm = ({ login, register, formError }: AuthFormProps) => {
         />
       </CardContent>
       <CardFooter className="flex justify-around gap-1">
-        <Button onClick={loginSubmit}>Login</Button>
-        <Button onClick={registerSubmit}>Register</Button>
+        <Button
+          disabled={!username || !password}
+          onClick={(ev) => handleSubmit(ev, "login")}
+        >
+          Login
+        </Button>
+        <Button
+          disabled={!username || !password}
+          onClick={(ev) => handleSubmit(ev, "register")}
+        >
+          Register
+        </Button>
         {formError && (
           <span className="bg-error text-error-content rounded-btn p-2">
             Error: {formError.message}
