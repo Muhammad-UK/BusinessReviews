@@ -9,6 +9,7 @@ import {
 } from "./ui/card";
 import { StyledLink } from "./ui/StyledLink";
 import { ArrowLeft, Building } from "lucide-react";
+import { AspectRatio } from "./ui/aspect-ratio";
 
 export const BusinessDetail: React.FC<{
   businesses: Business[];
@@ -29,7 +30,7 @@ export const BusinessDetail: React.FC<{
       </Card>
       <hr />
       <Card
-        className="mt-2 mb-2 w-fit rounded-btn hover:bg-slate-900"
+        className="mt-2 mb-2 w-full h-1/2 rounded-btn hover:bg-slate-900"
         key={specificBusiness.id}
       >
         <CardHeader>
@@ -40,16 +41,28 @@ export const BusinessDetail: React.FC<{
               specificBusiness.reviews.reduce((a, b) => a + b.rating, 0) /
               specificBusiness.reviews.length
             ).toFixed(1)}
-            /5
+            /5.0
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          {specificBusiness.description} <br />
-          They are based in {specificBusiness.city}
+        <CardContent className="flex flex-rows gap-4 h-min w-fit">
+          <p className="w-ful; flex-2">
+            {specificBusiness.description} <br />{" "}
+            <hr className="my-2 border border-solid " />
+            They are based in {specificBusiness.city}
+          </p>
+          {specificBusiness.photo_url && (
+            <AspectRatio className="flex-0" ratio={16 / 9}>
+              <img
+                src={specificBusiness.photo_url}
+                alt="business image"
+                className="w-full h-1/2 rounded-md object-cover"
+              />
+            </AspectRatio>
+          )}
         </CardContent>
       </Card>
       <h2>Reviews:</h2>
-      <div className="flex flex-rows gap-4 mt-2">
+      <div className="flex flex-rows flex-wrap gap-4 mt-2">
         {specificBusiness.reviews.map((review) => {
           if (!review.member_name) return null;
           return (

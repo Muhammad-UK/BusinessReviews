@@ -32,7 +32,7 @@ export const Businesses: React.FC<{
                       business.reviews.reduce((a, b) => a + b.rating, 0) /
                       business.reviews.length
                     ).toFixed(1)}
-                    /5
+                    /5.0
                   </CardDescription>
                 ) : (
                   <CardDescription>No reviews yet</CardDescription>

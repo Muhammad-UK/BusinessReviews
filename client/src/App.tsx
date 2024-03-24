@@ -141,6 +141,7 @@ function App() {
   // TODO I tried to make useEffects work but I couldn't get it to rerender properly whenever the pages were reloaded
   // Feedback on how I could've made this work would be appreciated
   const setMembersReviews = () => {
+    if (!members) return;
     members.forEach((member) => {
       member.reviews = reviews.filter(
         (review) => review.member_id === member.id
@@ -156,6 +157,7 @@ function App() {
     });
   };
   const setBusinessesReviews = () => {
+    if (!businesses) return;
     businesses.forEach((business) => {
       business.reviews = reviews.filter(
         (review) => review.business_id === business.id
