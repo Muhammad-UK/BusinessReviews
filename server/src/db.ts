@@ -186,3 +186,74 @@ export const findMemberWithToken = async (token: string): Promise<Member> => {
   }
   return response.rows[0] as Member;
 };
+
+// Updating data methods for members, businesses and reviews
+export const updateMember = async ({
+  id,
+  username,
+}: Member): Promise<Member> => {
+  const SQL = /*sql*/ `
+    UPDATE members 
+    SET username = $1
+    WHERE id = $2
+    RETURNING id, username
+    `;
+  const response = await client.query(SQL, [username, id]);
+  return response.rows[0] as Member;
+};
+export const updateBusiness = async ({
+  id,
+  name,
+  description,
+  city,
+  photo_url,
+}: Business): Promise<Business> => {
+  const SQL = /*sql*/ `
+    UPDATE businesses 
+    SET name = $1, description = $2, city = $3, photo_url = $4
+    WHERE id = $5
+    RETURNING *
+    `;
+  const response = await client.query(SQL, [
+    name,
+    description,
+    city,
+    photo_url,
+    id,
+  ]);
+  return response.rows[0] as Business;
+};
+export const updateReview = async ({
+  id,
+  rating,
+  comment,
+}: Review): Promise<Review> => {
+  const SQL = /*sql*/ `
+    UPDATE reviews 
+    SET rating = $3, comment = $4
+    WHERE id = $5
+    RETURNING *
+    `;
+  const response = await client.query(SQL, [rating, comment, id]);
+  return response.rows[0] as Review;
+};
+
+// Deleting data methods for members, businesses and reviews
+export const deleteMember = async ({ id }: Member): Promise<void> => {
+  const SQL = /*sql*/ `
+    DELETE FROM members WHERE id = $1
+    `;
+  await client.query(SQL, [id]);
+};
+export const deleteBusiness = async ({ id }: Business): Promise<void> => {
+  const SQL = /*sql*/ `
+    DELETE FROM businesses WHERE id = $1
+    `;
+  await client.query(SQL, [id]);
+};
+export const deleteReview = async ({ id }: Review): Promise<void> => {
+  const SQL = /*sql*/ `
+    DELETE FROM reviews WHERE id = $1
+    `;
+  await client.query(SQL, [id]);
+};

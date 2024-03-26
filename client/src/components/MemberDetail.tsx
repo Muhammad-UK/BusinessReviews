@@ -1,8 +1,9 @@
-import { Member } from "@/lib/frontendTypes";
+import { Member, Review } from "@/lib/frontendTypes";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
@@ -11,16 +12,19 @@ import { useContext } from "react";
 import { AuthContextType } from "@/lib/frontendTypes";
 import { StyledLink } from "./ui/StyledLink";
 import { useParams } from "react-router-dom";
-import { ArrowLeft, CircleUserRound } from "lucide-react";
+import { ArrowLeft, CircleUserRound, CircleX } from "lucide-react";
 
 export const MemberDetail: React.FC<{
   members: Member[];
   setMembersReviews: () => void;
-}> = ({ members, setMembersReviews }) => {
+  deleteReview: (review: Review) => void;
+}> = ({ members, setMembersReviews, deleteReview }) => {
   const contextValues = useContext(AuthContext);
   if (!contextValues) return null;
+
   const { auth } = contextValues as AuthContextType;
   const { id } = useParams();
+
   if (!id) return <div>No ID</div>;
   const specificMember = members.find((member) => member.id === id);
   if (!specificMember) return <div>No matches found</div>;
@@ -59,6 +63,14 @@ export const MemberDetail: React.FC<{
               <CardContent>
                 <CardDescription>{review.comment}</CardDescription>
               </CardContent>
+              {review.member_id === auth?.id && (
+                <CardFooter>
+                  <CircleX
+                    className="cursor-pointer hover:text-rose-500"
+                    onClick={() => deleteReview(review)}
+                  />
+                </CardFooter>
+              )}
             </Card>
           );
         })}

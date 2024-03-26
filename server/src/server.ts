@@ -10,6 +10,10 @@ import {
   fetchReviews,
   fetchReviewsById,
   findMemberWithToken,
+  updateMember,
+  updateBusiness,
+  updateReview,
+  deleteReview,
 } from "./db";
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
@@ -130,6 +134,25 @@ app.post("/api/reviews/:business_id", isLoggedIn, async (req, res, next) => {
     next(error);
   }
 });
+
+// DELETE Route to delete a review
+app.delete(
+  "/api/reviews/:id/:member_id",
+  isLoggedIn,
+  async (req, res, next) => {
+    try {
+      if (!req.params.id || req.body.member.id !== req.params.member_id) {
+        const error: SpecializedError = Error("Bad Request");
+        error.status = 400;
+        throw error;
+      }
+      await deleteReview({ id: req.params.id });
+      res.sendStatus(204);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 // Error Handling
 app.use(

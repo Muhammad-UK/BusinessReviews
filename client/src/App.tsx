@@ -115,6 +115,7 @@ function App() {
     fetchReviews();
   }, [auth]);
 
+  // POST Function to create a review
   const createReviewFn = async (review: Review) => {
     const token = window.localStorage.getItem("token");
     const createdReview = {
@@ -140,6 +141,27 @@ function App() {
         fetchMemberData();
       } else {
         setFormError(Error("Review Creation Error"));
+      }
+    }
+  };
+
+  // DELETE Function to delete a review
+  const deleteReview = async (review: Review) => {
+    const token = window.localStorage.getItem("token");
+    if (token) {
+      const response = await fetch(`/api/reviews/${review.id}/${auth?.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
+      if (response.ok) {
+        fetchReviews();
+        fetchBusinessData();
+        fetchMemberData();
+        setMembersReviews();
+        setBusinessesReviews();
       }
     }
   };
@@ -325,6 +347,7 @@ function App() {
                 path="/members/:id"
                 element={
                   <MemberDetail
+                    deleteReview={deleteReview}
                     members={members}
                     setMembersReviews={setMembersReviews}
                   />

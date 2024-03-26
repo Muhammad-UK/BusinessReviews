@@ -39,7 +39,7 @@ export const Homepage: React.FC<{
     let maxRating = 0;
     businesses.forEach((business) => {
       business.reviews.forEach((review, index) => {
-        if (review.rating > max.reviews[index].rating) {
+        if (review.rating > max.reviews[index]?.rating) {
           max = business;
           maxRating = review.rating;
         }
