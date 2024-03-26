@@ -50,6 +50,17 @@ export const Homepage: React.FC<{
   };
 
   const setMostReviewed = (businesses: Business[]) => {
+    if (businesses.length === 0) {
+      return {
+        id: "",
+        name: "",
+        description: "",
+        city: "",
+        overallRating: 0,
+        reviews: [],
+      };
+    }
+
     let max = businesses[0];
     businesses.forEach((business) => {
       if (business.reviews.length > max.reviews.length) max = business;
@@ -58,6 +69,14 @@ export const Homepage: React.FC<{
   };
 
   const setMostActive = (members: Member[]) => {
+    if (members.length === 0) {
+      return {
+        id: "",
+        username: "",
+        reviews: [],
+      };
+    }
+
     let max = members[0];
     members.forEach((member) => {
       if (member.reviews.length > max.reviews.length) max = member;
@@ -106,7 +125,7 @@ export const Homepage: React.FC<{
           </CardHeader>
           <CardContent className="text-center font-bold text-xl">
             <StyledLink to={`/members/${mostActive.id}`}>
-              {mostActive.username[0].toUpperCase() +
+              {mostActive.username[0]?.toUpperCase() +
                 mostActive.username.slice(1)}
             </StyledLink>
           </CardContent>

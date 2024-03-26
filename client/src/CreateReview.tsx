@@ -21,6 +21,8 @@ import {
 } from "./components/ui/select";
 import { Slider } from "./components/ui/slider";
 import { useNavigate } from "react-router-dom";
+import { TriangleAlert } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "./components/ui/dialog";
 
 export const CreateReview = () => {
   const contextValues = useContext(AuthContext);
@@ -43,13 +45,31 @@ export const CreateReview = () => {
     <>
       <h2>
         Create a Review:
-        {formError && (
-          <span className="bg-error text-error-content text-xl ml-2 rounded-btn p-2">
-            Error: {formError.message}
-          </span>
-        )}
+        {formError &&
+          !formError.message.toLowerCase().startsWith("login") &&
+          !formError.message.toLowerCase().startsWith("registration") && (
+            <span className="bg-error text-error-content text-xl ml-2 rounded-btn p-2">
+              Error: {formError.message}
+            </span>
+          )}
       </h2>
-      <div>{!auth && <AuthForm />}</div>
+      <div>
+        {!auth && (
+          <>
+            <Dialog>
+              <DialogTrigger className="w-full">
+                <Button className="py-4 px-6 mt-4 text-2xl bg-yellow-300">
+                  <TriangleAlert />
+                  Please Login or Register to Create a Review
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-fit flex flex-col items-center justify-center">
+                <AuthForm />
+              </DialogContent>
+            </Dialog>
+          </>
+        )}
+      </div>
       {auth && (
         <Card>
           <CardHeader>

@@ -22,7 +22,7 @@ export const BusinessDetail: React.FC<{
   setBusinessesReviews();
   return (
     <div>
-      <Card className="mb-2 w-fit rounded-btn hover:bg-slate-900">
+      <Card className="mb-2 w-fit rounded-btn">
         <StyledLink to="/businesses">
           <ArrowLeft />
           Back to all businesses
@@ -30,18 +30,23 @@ export const BusinessDetail: React.FC<{
       </Card>
       <hr />
       <Card
-        className="mt-2 mb-2 w-full h-1/2 rounded-btn hover:bg-slate-900"
+        className="mt-2 mb-2 w-full h-1/2 rounded-btn"
         key={specificBusiness.id}
       >
         <CardHeader>
           <CardTitle className="flex gap-2">
             <Building />
-            {specificBusiness.name} <br /> Overall Rating:{" "}
-            {(
-              specificBusiness.reviews.reduce((a, b) => a + b.rating, 0) /
-              specificBusiness.reviews.length
-            ).toFixed(1)}
-            /5.0
+            {specificBusiness.name} <br />{" "}
+            {specificBusiness.reviews.length > 0 && (
+              <>
+                Overall Rating:{" "}
+                {(
+                  specificBusiness.reviews.reduce((a, b) => a + b.rating, 0) /
+                  specificBusiness.reviews.length
+                ).toFixed(1)}
+                /5.0
+              </>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-rows gap-4 h-min w-fit">
@@ -51,36 +56,42 @@ export const BusinessDetail: React.FC<{
             They are based in {specificBusiness.city}
           </p>
           {specificBusiness.photo_url && (
-            <AspectRatio className="flex-0" ratio={16 / 9}>
+            <AspectRatio className="flex-0" ratio={4 / 3}>
               <img
                 src={specificBusiness.photo_url}
                 alt="business image"
-                className="w-full h-1/2 rounded-md object-cover"
+                className="w-full rounded-md object-cover"
               />
             </AspectRatio>
           )}
         </CardContent>
       </Card>
-      <h2>Reviews:</h2>
-      <div className="flex flex-rows flex-wrap gap-4 mt-2">
-        {specificBusiness.reviews.map((review) => {
-          if (!review.member_name) return null;
-          return (
-            <Card className="hover:bg-slate-900" key={specificBusiness.id}>
-              <CardHeader>
-                <CardTitle>
-                  {review.member_name[0].toUpperCase() +
-                    review.member_name.slice(1)}
-                </CardTitle>
-                <CardTitle>Rating: {review.rating}/5</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>{review.comment}</CardDescription>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      {specificBusiness.reviews.length > 0 ? (
+        <>
+          <h2>Reviews:</h2>
+          <div className="flex flex-rows flex-wrap gap-4 mt-2">
+            {specificBusiness.reviews.map((review) => {
+              if (!review.member_name) return null;
+              return (
+                <Card className="hover:bg-slate-900" key={specificBusiness.id}>
+                  <CardHeader>
+                    <CardTitle>
+                      {review.member_name[0].toUpperCase() +
+                        review.member_name.slice(1)}
+                    </CardTitle>
+                    <CardTitle>Rating: {review.rating}/5</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription>{review.comment}</CardDescription>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </>
+      ) : (
+        <>{<StyledLink to="/createreviews">Create a review!</StyledLink>}</>
+      )}
     </div>
   );
 };

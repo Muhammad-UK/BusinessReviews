@@ -1,4 +1,3 @@
-import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Homepage } from "./Homepage";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { StyledLink } from "./components/ui/StyledLink";
@@ -12,6 +11,7 @@ import { AuthContextType, Business, Member, Review } from "./lib/frontendTypes";
 import { MemberDetail } from "./components/MemberDetail";
 import { BusinessDetail } from "./components/BusinessDetail";
 import { Button } from "./components/ui/button";
+import { ThemeProvider } from "./components/theme-provider";
 
 // Creating context in here instead of a separate context.tsx file because I only have one so far
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -29,6 +29,11 @@ function App() {
   const [formError, setFormError] = useState<Error | undefined>();
 
   const { pathname } = useLocation();
+
+  // Resetting error state
+  useEffect(() => {
+    setFormError(undefined);
+  }, [pathname]);
 
   // Login Helper function
   const attemptLoginWithToken = async () => {
@@ -138,8 +143,8 @@ function App() {
   };
 
   // Helper functions to set reviews to members and businesses and do any related logic
-  // TODO I tried to make useEffects work but I couldn't get it to rerender properly whenever the pages were reloaded
-  // Feedback on how I could've made this work would be appreciated
+  // ? I tried to make useEffects work but I couldn't get it to rerender properly whenever the pages were reloaded
+  // ? Feedback on how I could've made this work would be appreciated
   const setMembersReviews = () => {
     if (!members) return;
     members.forEach((member) => {
@@ -185,12 +190,11 @@ function App() {
 
   return (
     <>
-      <main>
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <main>
           <h1>Business Reviews</h1>
           <nav className="navbar flex-rows gap-4">
             <div role="tablist" className="flex-1 tabs tabs-boxed">
-              {/* //TODO change default active tab colors to some blue */}
               <StyledLink
                 role="tab"
                 className={`tab ${pathname === "/" ? "tab-active" : ""}`}
@@ -227,15 +231,16 @@ function App() {
               </StyledLink>
               <StyledLink
                 role="tab"
-                className={`tab ${pathname === "/faq" ? "tab-active" : ""}`}
+                className={`tab  ${pathname === "/faq" ? "tab-active" : ""}`}
                 to="/faq"
               >
                 FAQ
               </StyledLink>
             </div>
             <div className="flex-0">
-              {auth && <Button onClick={logout}>Logout</Button>}
-              {!auth && !pathname.startsWith("/createreviews") && (
+              {auth ? (
+                <Button onClick={logout}>Logout</Button>
+              ) : (
                 <AuthContext.Provider value={AuthContextValues}>
                   <AuthForm />
                 </AuthContext.Provider>
@@ -300,8 +305,8 @@ function App() {
             />
             <Route path="/faq" element={<FAQ />} />
           </Routes>
-        </ThemeProvider>
-      </main>
+        </main>
+      </ThemeProvider>
     </>
   );
 }

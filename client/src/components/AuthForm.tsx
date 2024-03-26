@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { AuthContextType, Member } from "@/lib/frontendTypes";
+import { OctagonX } from "lucide-react";
 import React, { useContext, useState } from "react";
 
 export const AuthForm = () => {
@@ -39,6 +40,8 @@ export const AuthForm = () => {
       </CardHeader>
       <CardContent>
         <Input
+          className="mb-2"
+          type="text"
           onChange={(e) => setUsername(e.target.value)}
           value={username}
           placeholder="username"
@@ -49,7 +52,7 @@ export const AuthForm = () => {
           placeholder="password"
         />
       </CardContent>
-      <CardFooter className="flex justify-around gap-1">
+      <CardFooter className="relative flex justify-around gap-1">
         <Button
           disabled={!username || !password}
           onClick={(ev) => handleSubmit(ev, "login")}
@@ -63,8 +66,9 @@ export const AuthForm = () => {
           Register
         </Button>
         {formError && (
-          <span className="bg-error text-error-content rounded-btn p-2">
-            Error: {formError.message}
+          <span className="bg-error text-error-content text-center font-medium rounded-btn p-2 inline-flex items-center absolute top-full transform mt-2">
+            <OctagonX className="mr-2" /> {/* Adjust margin as needed */}
+            <span className="inline-block">{formError.message}</span>
           </span>
         )}
       </CardFooter>

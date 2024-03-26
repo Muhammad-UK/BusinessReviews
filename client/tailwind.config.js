@@ -74,7 +74,7 @@ module.exports = {
     },
   },
   daisyui: {
-    themes: ["sunset", "dark"],
+    themes: ["night", "winter"],
   },
   plugins: [require("tailwindcss-animate")],
   plugins: [require("daisyui")],
