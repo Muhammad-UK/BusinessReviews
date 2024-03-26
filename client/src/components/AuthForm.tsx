@@ -1,4 +1,4 @@
-import { AuthContext } from "@/App";
+import { FormContext } from "./contexts";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,14 +8,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { AuthContextType, Member } from "@/lib/frontendTypes";
+import { FormContextType, Member } from "@/lib/frontendTypes";
 import { OctagonX } from "lucide-react";
 import React, { useContext, useState } from "react";
 
 export const AuthForm = () => {
-  const contextValues = useContext(AuthContext);
+  const contextValues = useContext(FormContext);
   if (!contextValues) return null;
-  const { formError, login, register } = contextValues as AuthContextType;
+  const { formError, login, register } = contextValues as FormContextType;
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

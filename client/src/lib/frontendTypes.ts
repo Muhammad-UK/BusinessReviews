@@ -26,12 +26,14 @@ export interface HighestRatedBusiness extends Business {
 }
 export type LoginFn = (member?: Member) => Promise<void>;
 export type RegisterFn = (member?: Member) => Promise<void>;
-export type AuthContextType = {
-  auth: Member | undefined;
+export type FormContextType = {
   reviews: Review[];
   businesses: Business[];
   createReviewFn: (review: Review) => Promise<void>;
   formError: Error | undefined;
   login: LoginFn;
   register: RegisterFn;
+};
+export type AuthContextType = {
+  auth: Member | undefined;
 };

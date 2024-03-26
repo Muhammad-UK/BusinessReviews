@@ -6,20 +6,26 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { AuthContext } from "./contexts";
+import { useContext } from "react";
+import { AuthContextType } from "@/lib/frontendTypes";
 import { StyledLink } from "./ui/StyledLink";
 import { useParams } from "react-router-dom";
 import { ArrowLeft, CircleUserRound } from "lucide-react";
-import React from "react";
 
 export const MemberDetail: React.FC<{
   members: Member[];
   setMembersReviews: () => void;
 }> = ({ members, setMembersReviews }) => {
+  const contextValues = useContext(AuthContext);
+  if (!contextValues) return null;
+  const { auth } = contextValues as AuthContextType;
   const { id } = useParams();
   if (!id) return <div>No ID</div>;
   const specificMember = members.find((member) => member.id === id);
   if (!specificMember) return <div>No matches found</div>;
   setMembersReviews();
+
   return (
     <div>
       <Card
@@ -33,9 +39,12 @@ export const MemberDetail: React.FC<{
       </Card>
       <h2 className="flex gap-2">
         <CircleUserRound />
-        {specificMember.username[0].toUpperCase() +
-          specificMember.username.slice(1)}
-        's Reviews:
+        {specificMember.id === auth?.id
+          ? "Your"
+          : specificMember.username[0].toUpperCase() +
+            specificMember.username.slice(1) +
+            "'s"}{" "}
+        Reviews:
       </h2>
       <div className="flex flex-rows flex-wrap w-fit gap-4 mt-2">
         {specificMember.reviews.map((review) => {

@@ -6,17 +6,19 @@ import { Businesses } from "./Businesses";
 import { Members } from "./Members";
 import { CreateReview } from "./CreateReview";
 import { FAQ } from "./FAQ";
-import { createContext, useEffect, useState } from "react";
-import { AuthContextType, Business, Member, Review } from "./lib/frontendTypes";
+import { useEffect, useState } from "react";
+import {
+  FormContextType,
+  Business,
+  Member,
+  Review,
+  AuthContextType,
+} from "./lib/frontendTypes";
 import { MemberDetail } from "./components/MemberDetail";
 import { BusinessDetail } from "./components/BusinessDetail";
-import { Button } from "./components/ui/button";
 import { ThemeProvider } from "./components/theme-provider";
-
-// Creating context in here instead of a separate context.tsx file because I only have one so far
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
-);
+import { Avatar, AvatarFallback } from "./components/ui/avatar";
+import { AuthContext, FormContext } from "./components/contexts";
 
 function App() {
   // Initializing members and businesses state
@@ -178,8 +180,9 @@ function App() {
     });
   };
 
-  const AuthContextValues: AuthContextType = {
-    auth,
+  // Context value declarations
+  const AuthContextValue: AuthContextType = { auth };
+  const FormContextValues: FormContextType = {
     reviews,
     businesses,
     createReviewFn,
@@ -191,121 +194,154 @@ function App() {
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <main>
-          <h1>Business Reviews</h1>
-          <nav className="navbar flex-rows gap-4">
-            <div role="tablist" className="flex-1 tabs tabs-boxed">
-              <StyledLink
-                role="tab"
-                className={`tab ${pathname === "/" ? "tab-active" : ""}`}
-                to="/"
-              >
-                Home
-              </StyledLink>
-              <StyledLink
-                role="tab"
-                className={`tab ${
-                  pathname.startsWith("/businesses") ? "tab-active" : ""
-                }`}
-                to="/businesses"
-              >
-                Businesses ({businesses.length})
-              </StyledLink>
-              <StyledLink
-                role="tab"
-                className={`tab ${
-                  pathname.startsWith("/members") ? "tab-active" : ""
-                }`}
-                to="/members"
-              >
-                Members ({members.length})
-              </StyledLink>
-              <StyledLink
-                role="tab"
-                className={`tab ${
-                  pathname === "/createreviews" ? "tab-active" : ""
-                }`}
-                to="/createreviews"
-              >
-                Create A Review ({reviews.length})
-              </StyledLink>
-              <StyledLink
-                role="tab"
-                className={`tab  ${pathname === "/faq" ? "tab-active" : ""}`}
-                to="/faq"
-              >
-                FAQ
-              </StyledLink>
-            </div>
-            <div className="flex-0">
-              {auth ? (
-                <Button onClick={logout}>Logout</Button>
-              ) : (
-                <AuthContext.Provider value={AuthContextValues}>
-                  <AuthForm />
-                </AuthContext.Provider>
-              )}
-            </div>
-          </nav>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Homepage
-                  businesses={businesses}
-                  members={members}
-                  setBusinessesReviews={setBusinessesReviews}
-                  setMembersReviews={setMembersReviews}
-                />
-              }
-            />
-            <Route
-              path="/businesses"
-              element={
-                <Businesses
-                  businesses={businesses}
-                  setBusinessesReviews={setBusinessesReviews}
-                />
-              }
-            />
-            <Route
-              path="/businesses/:id"
-              element={
-                <BusinessDetail
-                  businesses={businesses}
-                  setBusinessesReviews={setBusinessesReviews}
-                />
-              }
-            />
-            <Route
-              path="/members"
-              element={
-                <Members
-                  members={members}
-                  setMembersReviews={setMembersReviews}
-                />
-              }
-            />
-            <Route
-              path="/members/:id"
-              element={
-                <MemberDetail
-                  members={members}
-                  setMembersReviews={setMembersReviews}
-                />
-              }
-            />
-            <Route
-              path="/createreviews"
-              element={
-                <AuthContext.Provider value={AuthContextValues}>
-                  <CreateReview />
-                </AuthContext.Provider>
-              }
-            />
-            <Route path="/faq" element={<FAQ />} />
-          </Routes>
-        </main>
+        <AuthContext.Provider value={AuthContextValue}>
+          <main>
+            <h1>Business Reviews</h1>
+            <nav className="navbar flex-rows gap-4">
+              <div role="tablist" className="flex-1 tabs tabs-boxed">
+                <StyledLink
+                  role="tab"
+                  className={`tab ${pathname === "/" ? "tab-active" : ""}`}
+                  to="/"
+                >
+                  Home
+                </StyledLink>
+                <StyledLink
+                  role="tab"
+                  className={`tab ${
+                    pathname.startsWith("/businesses") ? "tab-active" : ""
+                  }`}
+                  to="/businesses"
+                >
+                  Businesses ({businesses.length})
+                </StyledLink>
+                <StyledLink
+                  role="tab"
+                  className={`tab ${
+                    pathname.startsWith("/members") ? "tab-active" : ""
+                  }`}
+                  to="/members"
+                >
+                  Members ({members.length})
+                </StyledLink>
+                <StyledLink
+                  role="tab"
+                  className={`tab ${
+                    pathname === "/createreviews" ? "tab-active" : ""
+                  }`}
+                  to="/createreviews"
+                >
+                  Create A Review ({reviews.length})
+                </StyledLink>
+                <StyledLink
+                  role="tab"
+                  className={`tab  ${pathname === "/faq" ? "tab-active" : ""}`}
+                  to="/faq"
+                >
+                  FAQ
+                </StyledLink>
+              </div>
+              <div className="flex-0">
+                {auth ? (
+                  <>
+                    <div tabIndex={0} className="dropdown">
+                      <div role="button" className="btn btn-ghost btn-circle">
+                        <Avatar>
+                          <AvatarFallback>
+                            {auth.username.slice(0, 1).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                      <ul
+                        tabIndex={0}
+                        className="menu menu-sm dropdown-content shadow bg-base-500 rounded-box"
+                      >
+                        <li>
+                          <StyledLink
+                            className="text-base"
+                            to={`/members/${auth.id}`}
+                          >
+                            Profile
+                          </StyledLink>
+                        </li>
+                        <li>
+                          <button
+                            className="btn text-base text-zinc-200"
+                            onClick={logout}
+                          >
+                            Logout
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </>
+                ) : (
+                  <FormContext.Provider value={FormContextValues}>
+                    <AuthForm />
+                  </FormContext.Provider>
+                )}
+              </div>
+            </nav>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Homepage
+                    businesses={businesses}
+                    members={members}
+                    setBusinessesReviews={setBusinessesReviews}
+                    setMembersReviews={setMembersReviews}
+                  />
+                }
+              />
+              <Route
+                path="/businesses"
+                element={
+                  <Businesses
+                    businesses={businesses}
+                    setBusinessesReviews={setBusinessesReviews}
+                  />
+                }
+              />
+              <Route
+                path="/businesses/:id"
+                element={
+                  <BusinessDetail
+                    businesses={businesses}
+                    setBusinessesReviews={setBusinessesReviews}
+                  />
+                }
+              />
+              <Route
+                path="/members"
+                element={
+                  <Members
+                    members={members}
+                    setMembersReviews={setMembersReviews}
+                  />
+                }
+              />
+              <Route
+                path="/members/:id"
+                element={
+                  <MemberDetail
+                    members={members}
+                    setMembersReviews={setMembersReviews}
+                  />
+                }
+              />
+              <Route
+                path="/createreviews"
+                element={
+                  <FormContext.Provider value={FormContextValues}>
+                    <CreateReview />
+                  </FormContext.Provider>
+                }
+              />
+              <Route path="/faq" element={<FAQ />} />
+            </Routes>
+          </main>
+        </AuthContext.Provider>
       </ThemeProvider>
     </>
   );

@@ -91,7 +91,7 @@ export const Homepage: React.FC<{
     <div>
       <h2 className="mb-4">Welcome to the Business Reviews!</h2>
       <div className="flex flex-rows gap-4">
-        <Card>
+        <Card className="hover:bg-slate-900">
           <CardHeader>
             <CardTitle>The highest rated business:</CardTitle>
           </CardHeader>
@@ -106,7 +106,7 @@ export const Homepage: React.FC<{
             </CardFooter>
           )}
         </Card>
-        <Card>
+        <Card className="hover:bg-slate-900">
           <CardHeader>
             <CardTitle>The most reviewed business:</CardTitle>
           </CardHeader>
@@ -119,7 +119,7 @@ export const Homepage: React.FC<{
             {mostReviewed.reviews.length} reviews
           </CardFooter>
         </Card>
-        <Card>
+        <Card className="hover:bg-slate-900">
           <CardHeader>
             <CardTitle>The most active member:</CardTitle>
           </CardHeader>

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthForm } from "./components/AuthForm";
-import { AuthContextType, Review } from "./lib/frontendTypes";
-import { AuthContext } from "./App";
+import { AuthContextType, FormContextType, Review } from "./lib/frontendTypes";
+import { AuthContext, FormContext } from "./components/contexts";
 import { Button } from "./components/ui/button";
 import {
   Card,
@@ -25,10 +25,12 @@ import { TriangleAlert } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "./components/ui/dialog";
 
 export const CreateReview = () => {
-  const contextValues = useContext(AuthContext);
-  if (!contextValues) return null;
-  const { auth, reviews, businesses, createReviewFn, formError } =
-    contextValues as AuthContextType;
+  const contextValues = useContext(FormContext);
+  const authContext = useContext(AuthContext);
+  if (!contextValues || !authContext) return null;
+  const { reviews, businesses, createReviewFn, formError } =
+    contextValues as FormContextType;
+  const { auth } = authContext as AuthContextType;
   const [rating, setRating] = useState(1);
   const [comment, setComment] = useState("");
   const [business_id, setBusiness_id] = useState("");
