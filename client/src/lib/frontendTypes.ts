@@ -21,6 +21,9 @@ export type Business = {
   photo_url?: string;
   reviews: Review[];
 };
+export interface HighestRatedBusiness extends Business {
+  overallRating?: number;
+}
 export type LoginFn = (member?: Member) => Promise<void>;
 export type RegisterFn = (member?: Member) => Promise<void>;
 export type AuthContextType = {

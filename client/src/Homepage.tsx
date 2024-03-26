@@ -5,32 +5,114 @@ import {
   CardHeader,
   CardTitle,
 } from "./components/ui/card";
+import { StyledLink } from "./components/ui/StyledLink";
+import { Business, HighestRatedBusiness, Member } from "./lib/frontendTypes";
 
-export const Homepage = () => {
+export const Homepage: React.FC<{
+  businesses: Business[];
+  members: Member[];
+  setBusinessesReviews: () => void;
+  setMembersReviews: () => void;
+}> = ({ businesses, members, setBusinessesReviews, setMembersReviews }) => {
+  if (!businesses || !members)
+    return (
+      <div>
+        <h2>Something went wrong...</h2>
+      </div>
+    );
+  setBusinessesReviews();
+  setMembersReviews();
+
+  const setHighestRating = (businesses: Business[]) => {
+    if (businesses.length === 0) {
+      return {
+        id: "",
+        name: "",
+        description: "",
+        city: "",
+        overallRating: 0,
+        reviews: [],
+      };
+    }
+
+    let max: HighestRatedBusiness = businesses[0];
+    let maxRating = 0;
+    businesses.forEach((business) => {
+      business.reviews.forEach((review, index) => {
+        if (review.rating > max.reviews[index].rating) {
+          max = business;
+          maxRating = review.rating;
+        }
+      });
+    });
+    max.overallRating = maxRating;
+    return max;
+  };
+
+  const setMostReviewed = (businesses: Business[]) => {
+    let max = businesses[0];
+    businesses.forEach((business) => {
+      if (business.reviews.length > max.reviews.length) max = business;
+    });
+    return max;
+  };
+
+  const setMostActive = (members: Member[]) => {
+    let max = members[0];
+    members.forEach((member) => {
+      if (member.reviews.length > max.reviews.length) max = member;
+    });
+    return max;
+  };
+
+  const maxRating = setHighestRating(businesses);
+  const mostReviewed = setMostReviewed(businesses);
+  const mostActive = setMostActive(members);
   return (
     <div>
       <h2 className="mb-4">Welcome to the Business Reviews!</h2>
       <div className="flex flex-rows gap-4">
-        <Card className="">
+        <Card>
           <CardHeader>
-            <CardTitle>The highest rated business</CardTitle>
+            <CardTitle>The highest rated business:</CardTitle>
           </CardHeader>
-          <CardContent>{"placeholder business"}</CardContent>
-          <CardFooter>{"placeholder rating"}</CardFooter>
+          <CardContent className="text-center font-bold text-xl">
+            <StyledLink to={`/businesses/${maxRating.id}`}>
+              {maxRating.name}
+            </StyledLink>
+          </CardContent>
+          {maxRating.overallRating && (
+            <CardFooter className="justify-center">
+              Rating: {maxRating.overallRating.toFixed(1)}/5.0
+            </CardFooter>
+          )}
         </Card>
-        <Card className="">
+        <Card>
           <CardHeader>
-            <CardTitle>The most reviewed business</CardTitle>
+            <CardTitle>The most reviewed business:</CardTitle>
           </CardHeader>
-          <CardContent>{"placeholder business"}</CardContent>
-          <CardFooter>{"placeholder reviews"}</CardFooter>
+          <CardContent className="text-center font-bold text-xl">
+            <StyledLink to={`/businesses/${mostReviewed.id}`}>
+              {mostReviewed.name}
+            </StyledLink>
+          </CardContent>
+          <CardFooter className="justify-center">
+            {mostReviewed.reviews.length} reviews
+          </CardFooter>
         </Card>
-        <Card className="">
+        <Card>
           <CardHeader>
-            <CardTitle>The most active member</CardTitle>
+            <CardTitle>The most active member:</CardTitle>
           </CardHeader>
-          <CardContent>{"placeholder member"}</CardContent>
-          <CardFooter>{"placeholder reviews/ratings"}</CardFooter>
+          <CardContent className="text-center font-bold text-xl">
+            <StyledLink to={`/members/${mostActive.id}`}>
+              {mostActive.username[0].toUpperCase() +
+                mostActive.username.slice(1)}
+            </StyledLink>
+          </CardContent>
+          <CardFooter className="justify-center">
+            {mostActive.reviews.length} reviews
+          </CardFooter>
         </Card>
       </div>
     </div>

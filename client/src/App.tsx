@@ -201,7 +201,7 @@ function App() {
               <StyledLink
                 role="tab"
                 className={`tab ${
-                  pathname === "/businesses" ? "tab-active" : ""
+                  pathname.startsWith("/businesses") ? "tab-active" : ""
                 }`}
                 to="/businesses"
               >
@@ -209,7 +209,9 @@ function App() {
               </StyledLink>
               <StyledLink
                 role="tab"
-                className={`tab ${pathname === "/members" ? "tab-active" : ""}`}
+                className={`tab ${
+                  pathname.startsWith("/members") ? "tab-active" : ""
+                }`}
                 to="/members"
               >
                 Members ({members.length})
@@ -241,7 +243,17 @@ function App() {
             </div>
           </nav>
           <Routes>
-            <Route path="/" element={<Homepage />} />
+            <Route
+              path="/"
+              element={
+                <Homepage
+                  businesses={businesses}
+                  members={members}
+                  setBusinessesReviews={setBusinessesReviews}
+                  setMembersReviews={setMembersReviews}
+                />
+              }
+            />
             <Route
               path="/businesses"
               element={

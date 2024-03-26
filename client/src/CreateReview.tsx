@@ -20,6 +20,7 @@ import {
   SelectGroup,
 } from "./components/ui/select";
 import { Slider } from "./components/ui/slider";
+import { useNavigate } from "react-router-dom";
 
 export const CreateReview = () => {
   const contextValues = useContext(AuthContext);
@@ -29,11 +30,13 @@ export const CreateReview = () => {
   const [rating, setRating] = useState(1);
   const [comment, setComment] = useState("");
   const [business_id, setBusiness_id] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
     if (auth) {
       createReviewFn({ rating, comment, business_id } as Review);
+      navigate(`/businesses/${business_id}`);
     }
   };
   return (
