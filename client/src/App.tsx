@@ -113,6 +113,8 @@ function App() {
     fetchMemberData();
     fetchBusinessData();
     fetchReviews();
+    setBusinessesReviews();
+    setMembersReviews();
   }, [auth]);
 
   // POST Function to create a review
@@ -144,9 +146,8 @@ function App() {
       }
     }
   };
-
   // DELETE Function to delete a review
-  const deleteReview = async (review: Review) => {
+  const deleteReviewFn = async (review: Review) => {
     const token = window.localStorage.getItem("token");
     if (token) {
       const response = await fetch(`/api/reviews/${review.id}/${auth?.id}`, {
@@ -155,6 +156,33 @@ function App() {
           "Content-Type": "application/json",
           Authorization: `${token}`,
         },
+      });
+      if (response.ok) {
+        fetchReviews();
+        fetchBusinessData();
+        fetchMemberData();
+        setMembersReviews();
+        setBusinessesReviews();
+      }
+    }
+  };
+  // PUT Function to update a review
+  const updateReviewFn = async (review: Review) => {
+    const token = window.localStorage.getItem("token");
+    const updatedReview = {
+      review: {
+        rating: review.rating,
+        comment: review.comment || "",
+      },
+    };
+    if (token) {
+      const response = await fetch(`/api/reviews/${review.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify(updatedReview),
       });
       if (response.ok) {
         fetchReviews();
@@ -206,11 +234,11 @@ function App() {
   const AuthContextValue: AuthContextType = { auth };
   const FormContextValues: FormContextType = {
     reviews,
-    businesses,
     createReviewFn,
     formError,
     login,
     register,
+    updateReviewFn,
   };
 
   return (
@@ -249,7 +277,7 @@ function App() {
                 <StyledLink
                   role="tab"
                   className={`tab ${
-                    pathname === "/createreviews" ? "tab-active" : ""
+                    pathname.startsWith("/createreviews") ? "tab-active" : ""
                   }`}
                   to="/createreviews"
                 >
@@ -347,7 +375,7 @@ function App() {
                 path="/members/:id"
                 element={
                   <MemberDetail
-                    deleteReview={deleteReview}
+                    deleteReviewFn={deleteReviewFn}
                     members={members}
                     setMembersReviews={setMembersReviews}
                   />
@@ -357,7 +385,23 @@ function App() {
                 path="/createreviews"
                 element={
                   <FormContext.Provider value={FormContextValues}>
-                    <CreateReview />
+                    <CreateReview
+                      businesses={businesses}
+                      setBusinessesReviews={setBusinessesReviews}
+                      setMembersReviews={setMembersReviews}
+                    />
+                  </FormContext.Provider>
+                }
+              />
+              <Route
+                path="/createreviews/:id"
+                element={
+                  <FormContext.Provider value={FormContextValues}>
+                    <CreateReview
+                      businesses={businesses}
+                      setBusinessesReviews={setBusinessesReviews}
+                      setMembersReviews={setMembersReviews}
+                    />
                   </FormContext.Provider>
                 }
               />

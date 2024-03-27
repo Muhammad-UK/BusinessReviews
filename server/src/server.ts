@@ -154,6 +154,22 @@ app.delete(
   }
 );
 
+// PUT Route to update a review
+app.put("/api/reviews/:id", isLoggedIn, async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      const error: SpecializedError = Error("Bad Request");
+      error.status = 400;
+      throw error;
+    }
+    req.body.review.member_id = req.body.member.id;
+    req.body.review.id = req.params.id;
+    res.send(await updateReview(req.body.review));
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Error Handling
 app.use(
   (

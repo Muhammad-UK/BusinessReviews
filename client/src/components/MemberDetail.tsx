@@ -17,8 +17,8 @@ import { ArrowLeft, CircleUserRound, CircleX } from "lucide-react";
 export const MemberDetail: React.FC<{
   members: Member[];
   setMembersReviews: () => void;
-  deleteReview: (review: Review) => void;
-}> = ({ members, setMembersReviews, deleteReview }) => {
+  deleteReviewFn: (review: Review) => void;
+}> = ({ members, setMembersReviews, deleteReviewFn }) => {
   const contextValues = useContext(AuthContext);
   if (!contextValues) return null;
 
@@ -30,6 +30,7 @@ export const MemberDetail: React.FC<{
   if (!specificMember) return <div>No matches found</div>;
   setMembersReviews();
 
+  const editable: boolean = specificMember.id === auth?.id;
   return (
     <div>
       <Card
@@ -63,11 +64,11 @@ export const MemberDetail: React.FC<{
               <CardContent>
                 <CardDescription>{review.comment}</CardDescription>
               </CardContent>
-              {review.member_id === auth?.id && (
+              {editable && (
                 <CardFooter>
                   <CircleX
                     className="cursor-pointer hover:text-rose-500"
-                    onClick={() => deleteReview(review)}
+                    onClick={() => deleteReviewFn(review)}
                   />
                 </CardFooter>
               )}

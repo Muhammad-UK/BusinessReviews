@@ -54,6 +54,11 @@ export const createMember = async ({
   username,
   password,
 }: Member): Promise<Member> => {
+  if (!password) {
+    const error: SpecializedError = Error("Bad Request");
+    error.status = 400;
+    throw error;
+  }
   const SQL = /*sql*/ `
     INSERT INTO members(id, username, password)
     VALUES($1, $2, $3)
@@ -152,6 +157,11 @@ export const authenticate = async ({
   username,
   password,
 }: Member): Promise<{ token: string }> => {
+  if (!username || !password) {
+    const error: SpecializedError = Error("Bad Request");
+    error.status = 400;
+    throw error;
+  }
   const SQL = /*sql*/ `
     SELECT id, username, password FROM members WHERE username=$1;
     `;
@@ -225,16 +235,27 @@ export const updateBusiness = async ({
 };
 export const updateReview = async ({
   id,
+  member_id,
   rating,
   comment,
 }: Review): Promise<Review> => {
   const SQL = /*sql*/ `
     UPDATE reviews 
-    SET rating = $3, comment = $4
-    WHERE id = $5
+    SET rating = $1, comment = $2
+    WHERE (id = $3 AND member_id = $4)
     RETURNING *
     `;
-  const response = await client.query(SQL, [rating, comment, id]);
+  const response = await client.query(SQL, [
+    rating,
+    comment || "",
+    id,
+    member_id,
+  ]);
+  if (!response.rows.length) {
+    const error: SpecializedError = Error("Bad Request");
+    error.status = 400;
+    throw error;
+  }
   return response.rows[0] as Review;
 };
 
